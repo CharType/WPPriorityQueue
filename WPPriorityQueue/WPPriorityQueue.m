@@ -196,6 +196,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     
     NSInteger newCapacity = oldCapacity + (oldCapacity >> 1);
     elements = realloc(elements,newCapacity * sizeof(void *));
+    self.capacity = newCapacity;
 }
     
 - (void)emptyCheck {

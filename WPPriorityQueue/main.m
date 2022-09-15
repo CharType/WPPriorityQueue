@@ -48,15 +48,16 @@ int main(int argc, const char * argv[]) {
         [priorityQueue enQueue:p10];
         [priorityQueue enQueue:p11];
         [priorityQueue enQueue:p12];
+        assert(priorityQueue.size == 11);
 //        Persion *p = [priorityQueue front];
 //        [priorityQueue removeElement:p5];
-        [priorityQueue clear];
-        assert(priorityQueue.size == 0);
-        assert(priorityQueue.isEmpty);
-//        while (!priorityQueue.isEmpty) {
-//            Persion *p = [priorityQueue deQueue];
-//            NSLog(@"name = %@,age = %ld",p.name,p.age);
-//        }
+//        [priorityQueue clear];
+//        assert(priorityQueue.size == 0);
+//        assert(priorityQueue.isEmpty);
+        while (!priorityQueue.isEmpty) {
+            Persion *p = [priorityQueue deQueue];
+            NSLog(@"name = %@,age = %ld",p.name,p.age);
+        }
     }
     
     
