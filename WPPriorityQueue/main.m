@@ -22,7 +22,7 @@ int main(int argc, const char * argv[]) {
         Persion *p10 = [[Persion alloc] initWithName:@"元春" age:20];
         Persion *p11 = [[Persion alloc] initWithName:@"袭人" age:13];
         Persion *p12 = [[Persion alloc] initWithName:@"晴雯" age:16];
-        WPPriorityQueue *priorityQueue = [[WPPriorityQueue alloc] initWithCapacity:10 comparator:^NSInteger(Persion *p1, Persion *p2) {
+        WPPriorityQueue<Persion *> *priorityQueue = [[WPPriorityQueue alloc] initWithCapacity:10 comparator:^NSInteger(Persion *p1, Persion *p2) {
             return p1.age - p2.age;
         }];
         [priorityQueue enQueue:p1];
