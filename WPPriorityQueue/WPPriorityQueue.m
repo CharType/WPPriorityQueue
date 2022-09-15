@@ -15,6 +15,8 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 @interface WPPriorityQueue()
 // 记录数组存放的数据数量
 @property (nonatomic, assign) NSInteger count;
+// 队列容量
+@property (nonatomic, assign) NSInteger capacity;
 // 比较Block
 @property (nonatomic, copy) WPPriorityQueueComparator comparator;
 @end
@@ -37,6 +39,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     if (self = [super init]) {
         self.comparator = comparator;
         capacity = MAX(capacity, DEFAULT_CAPACITY);
+        self.capacity = capacity;
         elements = malloc(capacity * sizeof(void *));
     }
     return self;
@@ -188,15 +191,11 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 }
 
 - (void)ensureCapacity:(NSInteger)capacity {
-    NSInteger oldCapacity = self.count;
+    NSInteger oldCapacity = self.capacity;
     if (oldCapacity >= capacity) return;
     
     NSInteger newCapacity = oldCapacity + (oldCapacity >> 1);
-    void **newElements = malloc(newCapacity * sizeof(void *));
-    for (int i = 0; i < self.count; i++) {
-        newElements[i] = elements[i];
-    }
-    elements = newElements;
+    elements = realloc(elements,newCapacity * sizeof(void *));
 }
     
 - (void)emptyCheck {

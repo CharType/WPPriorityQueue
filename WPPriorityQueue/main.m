@@ -18,6 +18,10 @@ int main(int argc, const char * argv[]) {
         Persion *p6 = [[Persion alloc] initWithName:@"贾政" age:40];
         Persion *p7 = [[Persion alloc] initWithName:@"凤姐儿" age:20];
         Persion *p8 = [[Persion alloc] initWithName:@"平儿" age:19];
+        Persion *p9 = [[Persion alloc] initWithName:@"巧姐" age:3];
+        Persion *p10 = [[Persion alloc] initWithName:@"元春" age:20];
+        Persion *p11 = [[Persion alloc] initWithName:@"袭人" age:13];
+        Persion *p12 = [[Persion alloc] initWithName:@"晴雯" age:16];
         WPPriorityQueue *priorityQueue = [[WPPriorityQueue alloc] initWithCapacity:10 comparator:^NSInteger(Persion *p1, Persion *p2) {
             return p1.age - p2.age;
         }];
@@ -40,7 +44,11 @@ int main(int argc, const char * argv[]) {
         [priorityQueue enQueue:p8];
         assert(priorityQueue.size == 7);
         assert(!priorityQueue.isEmpty);
-        Persion *p = [priorityQueue front];
+        [priorityQueue enQueue:p9];
+        [priorityQueue enQueue:p10];
+        [priorityQueue enQueue:p11];
+        [priorityQueue enQueue:p12];
+//        Persion *p = [priorityQueue front];
 //        [priorityQueue removeElement:p5];
         [priorityQueue clear];
         assert(priorityQueue.size == 0);
