@@ -6,14 +6,16 @@
 //  优先级队列
 
 #import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
+typedef NSInteger (^WPPriorityQueueComparator)(id obj1, id obj2);
 
 @interface WPPriorityQueue<__covariant ObjectType> : NSObject
-- (instancetype)initWithCapacity:(NSInteger)capacity cmptr:(NSComparator)cmptr;
-- (instancetype)initWithArray:(NSArray<ObjectType> *)array cmptr:(NSComparator)cmptr;
+- (instancetype)initWithCapacity:(NSInteger)capacity comparator:(WPPriorityQueueComparator)comparator;
+- (instancetype)initWithArray:(NSArray<ObjectType> *)array comparator:(WPPriorityQueueComparator)comparator;
+- (void)clear;
+- (void)enQueue:(id)element;
+- (id)deQueue;
+- (void)removeElement:(id)element;
+- (id)front;
 - (BOOL)isEmpty;
 - (NSInteger)count;
 @end
-
-NS_ASSUME_NONNULL_END

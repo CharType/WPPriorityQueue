@@ -16,7 +16,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 // 记录数组存放的数据数量
 @property (nonatomic, assign) NSInteger count;
 // 比较Block
-@property (nonatomic, copy) NSComparator cmptr;
+@property (nonatomic, copy) WPPriorityQueueComparator comparator;
 @end
 
 @implementation WPPriorityQueue
@@ -27,26 +27,28 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 - (void)dealloc {
     if (elements) {
-        for (NSInteger i = 0; i<=self.count; i++) {
-            // 需要做一下release吗？
-            CFRelease(elements[i]);
-        }
+        [self clear];
+//        for (NSInteger i = 0; i<=self.count; i++) {
+//            // 需要做一下release吗？
+////            CFRelease(elements[i]);
+//            elements[i] = NULL;
+//        }
         free(elements);
     }
 }
 
-- (instancetype)initWithCapacity:(NSInteger)capacity cmptr:(NSComparator)cmptr {
+- (instancetype)initWithCapacity:(NSInteger)capacity comparator:(WPPriorityQueueComparator)comparator {
     if (self = [super init]) {
-        self.cmptr = cmptr;
+        self.comparator = comparator;
         capacity = MAX(capacity, DEFAULT_CAPACITY);
         elements = malloc(capacity * sizeof(void *));
     }
     return self;
 }
 
-- (instancetype)initWithArray:(NSArray<id> *)array cmptr:(NSComparator)cmptr {
+- (instancetype)initWithArray:(NSArray<id> *)array comparator:(WPPriorityQueueComparator)comparator {
     NSInteger capacity = MAX(array.count, DEFAULT_CAPACITY);
-    if(self = [self initWithCapacity:capacity cmptr:cmptr]) {
+    if(self = [self initWithCapacity:capacity comparator:comparator]) {
         for (NSInteger i = 0; i < array.count; i++) {
             elements[i] = (__bridge void *)(array[i]);
         }
@@ -60,6 +62,22 @@ static const NSInteger DEFAULT_CAPACITY = 10;
         elements[i] = NULL;
     }
     self.count = 0;
+}
+
+- (void)enQueue:(id)element {
+    [self addElement:element];
+}
+
+- (id)deQueue {
+    return [self remove];
+}
+
+- (id)front {
+    return [self get];
+}
+
+- (NSInteger)count {
+    return self.count;
 }
 
 - (void)addElement:(id)element {
@@ -88,7 +106,27 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 - (void)removeElement:(id)element {
     // 在数组中查找对应的元素，
-    // 删除，之后重新排堆中的数据
+    NSInteger index = -1;
+    for (NSInteger i = 0;i < self.count;i++) {
+        id value = (__bridge id)(elements[i]);
+        if(value == element) {
+            elements[i] = NULL;
+            index = i;
+            break;
+        }
+    }
+    if(index != -1) {
+        // 挪动后面的数据
+        for (NSInteger i = index ; i<self.count ; i++) {
+            if(i+1 < self.count) {
+                elements[i] = elements[i+1];
+            } else {
+                elements[self.count-1] = NULL;
+            }
+        }
+        self.count--;
+        [self siftDownForIndex:index];
+    }
 }
 
 - (id)replace:(id)element {
@@ -131,11 +169,11 @@ static const NSInteger DEFAULT_CAPACITY = 10;
         
         // 选出左右子节点最大的那个
         if (rightIndex < self.count &&
-            self.cmptr((__bridge id)(elements[rightIndex]),child)> 0) {
+            self.comparator((__bridge id)(elements[rightIndex]),child)> 0) {
             child = (__bridge id)(elements[childIndex = rightIndex]);
         }
         
-        if (self.cmptr(element,child) >= 0) break;
+        if (self.comparator(element,child) >= 0) break;
 
         // 将子节点存放到index位置
         elements[index] = (__bridge void *)(child);
@@ -150,7 +188,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     while (index > 0) {
         NSInteger parentIndex = (index - 1) >> 1;
         id parent = (__bridge id)(elements[parentIndex]);
-        if (self.cmptr(element, parent) <= 0) break;
+        if (self.comparator(element, parent) <= 0) break;
             // 将父元素存储在index位置
             elements[index] = (__bridge void *)(parent);
             // 重新赋值index
@@ -164,7 +202,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     if (oldCapacity >= capacity) return;
     
     NSInteger newCapacity = oldCapacity + (oldCapacity >> 1);
-    void **newElements = malloc(capacity * sizeof(void *));
+    void **newElements = malloc(newCapacity * sizeof(void *));
     for (int i = 0; i < self.count; i++) {
         newElements[i] = elements[i];
     }
