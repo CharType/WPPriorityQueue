@@ -47,8 +47,9 @@ int main(int argc, const char * argv[]) {
         [priorityQueue enQueue:p9];
         [priorityQueue enQueue:p10];
         [priorityQueue enQueue:p11];
-        [priorityQueue enQueue:p12];
-        assert(priorityQueue.size == 11);
+        [priorityQueue removeElement:p12];
+//        [priorityQueue enQueue:p12];
+//        assert(priorityQueue.size == 11);
 //        Persion *p = [priorityQueue front];
 //        [priorityQueue removeElement:p5];
 //        [priorityQueue clear];

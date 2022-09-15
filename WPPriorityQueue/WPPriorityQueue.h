@@ -9,6 +9,8 @@
 typedef NSInteger (^WPPriorityQueueComparator)(id obj1, id obj2);
 
 @interface WPPriorityQueue<ObjectType> : NSObject
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithCapacity:(NSInteger)capacity comparator:(WPPriorityQueueComparator)comparator;
 - (instancetype)initWithArray:(NSArray<ObjectType> *)array comparator:(WPPriorityQueueComparator)comparator;
 - (void)clear;
