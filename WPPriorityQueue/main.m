@@ -22,19 +22,35 @@ int main(int argc, const char * argv[]) {
             return p1.age - p2.age;
         }];
         [priorityQueue enQueue:p1];
+        assert(priorityQueue.size == 1);
         [priorityQueue enQueue:p2];
+        assert(priorityQueue.size == 2);
         [priorityQueue enQueue:p3];
+        assert(priorityQueue.size == 3);
         [priorityQueue enQueue:p4];
+        assert(priorityQueue.size == 4);
         [priorityQueue enQueue:p5];
-        [priorityQueue enQueue:p6];
-        [priorityQueue enQueue:p7];
-        [priorityQueue enQueue:p8];
+        assert(priorityQueue.size == 5);
         [priorityQueue removeElement:p5];
-//        [priorityQueue clear];
-        while (!priorityQueue.isEmpty) {
-            Persion *p = [priorityQueue deQueue];
-            NSLog(@"name = %@,age = %ld",p.name,p.age);
-        }
+        assert(priorityQueue.size == 4);
+        [priorityQueue enQueue:p6];
+        assert(priorityQueue.size == 5);
+        [priorityQueue enQueue:p7];
+        assert(priorityQueue.size == 6);
+        [priorityQueue enQueue:p8];
+        assert(priorityQueue.size == 7);
+        assert(!priorityQueue.isEmpty);
+        Persion *p = [priorityQueue front];
+//        [priorityQueue removeElement:p5];
+        [priorityQueue clear];
+        assert(priorityQueue.size == 0);
+        assert(priorityQueue.isEmpty);
+//        while (!priorityQueue.isEmpty) {
+//            Persion *p = [priorityQueue deQueue];
+//            NSLog(@"name = %@,age = %ld",p.name,p.age);
+//        }
     }
+    
+    
     return 0;
 }

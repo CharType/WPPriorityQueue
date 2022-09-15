@@ -26,6 +26,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 }
 
 - (void)dealloc {
+    NSLog(@"%s",__func__);
     if (elements) {
         [self clear];
 //        for (NSInteger i = 0; i<=self.count; i++) {
@@ -90,17 +91,17 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 -(id)get {
     [self emptyCheck];
-    return (__bridge id)(elements[0]);
+    return (__bridge_transfer id)(elements[0]);
 }
 
 - (id)remove {
     [self emptyCheck];
 
-    NSInteger lastIndex = --self.count;
-    id root = (__bridge id)(elements[0]);
+    NSInteger lastIndex = self.count - 1;
+    id root = (__bridge_transfer id)(elements[0]);
     elements[0] = elements[lastIndex];
     elements[lastIndex] = NULL;
-
+    self.count--;
     [self siftDownForIndex:0];
     return root;
 }
