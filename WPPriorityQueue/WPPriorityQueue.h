@@ -17,5 +17,5 @@ typedef NSInteger (^WPPriorityQueueComparator)(id obj1, id obj2);
 - (void)removeElement:(id)element;
 - (id)front;
 - (BOOL)isEmpty;
-- (NSInteger)count;
+- (NSInteger)size;
 @end

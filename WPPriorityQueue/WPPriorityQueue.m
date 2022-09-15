@@ -76,7 +76,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     return [self get];
 }
 
-- (NSInteger)count {
+- (NSInteger)size {
     return self.count;
 }
 
