@@ -30,7 +30,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
         [self clear];
 //        for (NSInteger i = 0; i<=self.count; i++) {
 //            // 需要做一下release吗？
-////            CFRelease(elements[i]);
+//            CFRelease(elements[i]);
 //            elements[i] = NULL;
 //        }
         free(elements);
@@ -59,6 +59,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 -(void)clear {
     for (NSInteger i = 0; i < self.count; i++) {
+//        CFRelease(elements[i]);
         elements[i] = NULL;
     }
     self.count = 0;
@@ -99,7 +100,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     id root = (__bridge id)(elements[0]);
     elements[0] = elements[lastIndex];
     elements[lastIndex] = NULL;
-        
+
     [self siftDownForIndex:0];
     return root;
 }
@@ -117,15 +118,21 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     }
     if(index != -1) {
         // 挪动后面的数据
-        for (NSInteger i = index ; i<self.count ; i++) {
-            if(i+1 < self.count) {
-                elements[i] = elements[i+1];
-            } else {
-                elements[self.count-1] = NULL;
-            }
-        }
-        self.count--;
+        NSInteger lastIndex = --self.count;
+        elements[index] = elements[lastIndex];
+        elements[lastIndex] = NULL;
         [self siftDownForIndex:index];
+    }
+}
+
+// 将index后面的数据都往前挪1位
+- (void)moveElementsForIndex:(NSInteger)index {
+    for (NSInteger i = index ; i<self.count ; i++) {
+        if(i+1 < self.count) {
+            elements[i] = elements[i+1];
+        } else {
+            elements[self.count-1] = NULL;
+        }
     }
 }
 

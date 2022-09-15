@@ -9,6 +9,11 @@
 
 
 @implementation Persion
+
+- (void)dealloc {
+    NSLog(@"数据delloc name = %@ age = %ld",self.name,self.age);
+}
+
 - (instancetype)initWithName:(NSString *)name age:(NSUInteger)age {
     if (self = [super init]) {
         self.name = name;
