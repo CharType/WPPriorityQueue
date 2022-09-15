@@ -10,7 +10,7 @@
 static const NSInteger DEFAULT_CAPACITY = 10;
 
 /**
- 数据拷贝后续使用C语言scp函数
+ OC版本优先级队列
  */
 @interface WPPriorityQueue()
 // 记录数组存放的数据数量
@@ -27,13 +27,8 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 - (void)dealloc {
     NSLog(@"%s",__func__);
+    [self clear];
     if (elements) {
-        [self clear];
-//        for (NSInteger i = 0; i<=self.count; i++) {
-//            // 需要做一下release吗？
-//            CFRelease(elements[i]);
-//            elements[i] = NULL;
-//        }
         free(elements);
     }
 }
@@ -60,7 +55,6 @@ static const NSInteger DEFAULT_CAPACITY = 10;
 
 -(void)clear {
     for (NSInteger i = 0; i < self.count; i++) {
-//        CFRelease(elements[i]);
         elements[i] = NULL;
     }
     self.count = 0;
@@ -126,17 +120,6 @@ static const NSInteger DEFAULT_CAPACITY = 10;
     }
 }
 
-// 将index后面的数据都往前挪1位
-- (void)moveElementsForIndex:(NSInteger)index {
-    for (NSInteger i = index ; i<self.count ; i++) {
-        if(i+1 < self.count) {
-            elements[i] = elements[i+1];
-        } else {
-            elements[self.count-1] = NULL;
-        }
-    }
-}
-
 - (id)replace:(id)element {
     [self elementNotNullCheckForObj:element];
     id root = NULL;
@@ -144,7 +127,7 @@ static const NSInteger DEFAULT_CAPACITY = 10;
         elements[0] = (__bridge void *)(element);
         self.count++;
     } else {
-        root = (__bridge id)(elements[0]);
+        root = (__bridge_transfer id)(elements[0]);
         elements[0] = (__bridge void *)(element);
         [self siftDownForIndex:0];
     }
@@ -167,7 +150,6 @@ static const NSInteger DEFAULT_CAPACITY = 10;
         // index的节点有2种情况
         // 1.只有左子节点
         // 2.同时有左右子节点
-                
         // 默认为左子节点跟它进行比较
         NSInteger childIndex = (index << 1) + 1;
         id child = (__bridge id)(elements[childIndex]);
